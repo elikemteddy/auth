@@ -6,7 +6,6 @@ import com.teasoft.auth.model.UserRole;
 import com.teasoft.auth.model.Users;
 import com.teasoft.auth.repo.UserRoleRepo;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,20 +33,20 @@ public class UserRoleService {
         return userRoleRepo.save(userRole);
     }
 
-    public Iterable<UserRole> saveAll(Iterable<UserRole> userRole) {
-        return userRoleRepo.saveAll(userRole);
+    public Iterable<UserRole> save(Iterable<UserRole> userRole) {
+        return userRoleRepo.save(userRole);
     }
 
     public void delete(UserRole userRole) {
         userRoleRepo.delete(userRole);
     }
 
-    public void deleteAll(Iterable<UserRole> userRole) {
-        userRoleRepo.deleteAll(userRole);
+    public void delete(Iterable<UserRole> userRole) {
+        userRoleRepo.delete(userRole);
     }
 
-    public void deleteById(Long id) {
-        userRoleRepo.deleteById(id);
+    public void delete(Long id) {
+        userRoleRepo.delete(id);
     }
 
     public void deleteAll() {
@@ -55,27 +54,27 @@ public class UserRoleService {
     }
 
     public Boolean exists(UserRole userRole) {
-        return userRoleRepo.existsById(userRole.getId());
+        return userRoleRepo.exists(userRole.getId());
     }
 
     public Boolean exists(Long roleId) {
-        return userRoleRepo.existsById(roleId);
+        return userRoleRepo.exists(roleId);
     }
 
     public List<UserRole> findAll() {
         return userRoleRepo.findAll();
     }
 
-    public Optional<UserRole> findOne(UserRole userRole) {
-        return userRoleRepo.findById(userRole.getId());
+    public UserRole findOne(UserRole userRole) {
+        return userRoleRepo.findOne(userRole.getId());
     }
 
-    public Optional<UserRole> findOne(Long roleId) {
-        return userRoleRepo.findById(roleId);
+    public UserRole findOne(Long roleId) {
+        return userRoleRepo.findOne(roleId);
     }
 
     public List<UserRole> findAll(Iterable<Long> roleIds) {
-        return userRoleRepo.findAllById(roleIds);
+        return userRoleRepo.findAll(roleIds);
     }
 
     public Long count() {

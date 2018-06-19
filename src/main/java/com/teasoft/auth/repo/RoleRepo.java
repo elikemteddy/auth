@@ -23,5 +23,5 @@ public interface RoleRepo extends CrudRepository<Role, Long> {
     Role findByRoleName(String roleName);
 
     @Override
-    List<Role> findAllById(Iterable<Long> itbls);
+    List<Role> findAll(Iterable<Long> itbls);
 }

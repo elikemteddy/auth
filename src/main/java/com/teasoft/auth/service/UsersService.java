@@ -11,7 +11,6 @@ import com.teasoft.auth.model.Users;
 import com.teasoft.auth.repo.UserRoleRepo;
 import com.teasoft.auth.repo.UsersRepo;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -59,16 +58,16 @@ public class UsersService {
         return usersRepo.findAll();
     }
 
-    public Optional<Users> findOne(Long id) {
-        return usersRepo.findById(id);
+    public Users findOne(Long id) {
+        return usersRepo.findOne(id);
     }
 
     public Users save(Users user) {
         return usersRepo.save(user);
     }
 
-    public Iterable<Users> saveAll(Iterable<Users> itrbl) {
-        return usersRepo.saveAll(itrbl);
+    public Iterable<Users> save(Iterable<Users> itrbl) {
+        return usersRepo.save(itrbl);
     }
 
     public void delete(Users user) {
@@ -76,7 +75,7 @@ public class UsersService {
     }
 
     public void delete(Long id) {
-        usersRepo.deleteById(id);
+        usersRepo.delete(id);
     }
 
     public void deleteAll() {
@@ -84,7 +83,7 @@ public class UsersService {
     }
 
     public void deleteListOfUserss(Iterable<Users> users) {
-        usersRepo.deleteAll(users);
+        usersRepo.delete(users);
     }
 
     public long count() {
@@ -92,7 +91,7 @@ public class UsersService {
     }
     
     public Boolean exists(Long userId) {
-        return usersRepo.existsById(userId);
+        return usersRepo.exists(userId);
     }
 
 }

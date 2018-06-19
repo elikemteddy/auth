@@ -9,7 +9,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +59,7 @@ public class RoleController {
         }
 
         if (roleService.exists(roleId)) {
-            role = roleService.findById(roleId).get();
+            role = roleService.findOne(roleId);
         } else {
             return new JSONResponse(false, 0, null, Enums.JSONResponseMessage.RESOURCE_NOT_FOUND.toString());
         }
@@ -85,7 +84,7 @@ public class RoleController {
             throw new MissingParameterException("Role ID");
         }
 
-        roleService.deleteById(roleId);
+        roleService.delete(roleId);
         return new JSONResponse(true, 1, null, Enums.JSONResponseMessage.SUCCESS.toString());
     }
 
@@ -100,7 +99,7 @@ public class RoleController {
             throw new MissingParameterException("Role ID");
         }
 
-        Optional<Role> role = roleService.findById(roleId);
+        Role role = roleService.findOne(roleId);
         return new JSONResponse(true, 1, role, Enums.JSONResponseMessage.SUCCESS.toString());
     }
 

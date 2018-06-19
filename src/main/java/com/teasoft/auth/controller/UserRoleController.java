@@ -62,8 +62,8 @@ public class UserRoleController {
             throw new MissingParameterException("User ID");
         }
 
-        Role role = roleService.findById(roleId).get();
-        Users user = userService.findOne(userId).get();
+        Role role = roleService.findOne(roleId);
+        Users user = userService.findOne(userId);
         UserRole userRole = new UserRole();
         userRole.setRole(role);
         userRole.setUser(user);
@@ -83,7 +83,7 @@ public class UserRoleController {
             if (!userRoleService.exists(userRoleId)) {
                 return new JSONResponse(false, 0, null, Enums.JSONResponseMessage.RESOURCE_NOT_FOUND.toString());
             }
-            userRole = userRoleService.findOne(userRoleId).get();
+            userRole = userRoleService.findOne(userRoleId);
         } else {
             throw new MissingParameterException("UserRole ID");
         }
@@ -93,7 +93,7 @@ public class UserRoleController {
             if (!roleService.exists(roleId)) {
                 return new JSONResponse(false, 0, null, Enums.JSONResponseMessage.RESOURCE_NOT_FOUND.toString());
             }
-            userRole.setRole(roleService.findById(roleId).get());
+            userRole.setRole(roleService.findOne(roleId));
         }
 
         if (dataHash.containsKey("userId")) {
@@ -101,7 +101,7 @@ public class UserRoleController {
             if (!userService.exists(userId)) {
                 return new JSONResponse(false, 0, null, Enums.JSONResponseMessage.RESOURCE_NOT_FOUND.toString());
             }
-            userRole.setUser(userService.findOne(userId).get());
+            userRole.setUser(userService.findOne(userId));
         }
 
         userRole = userRoleService.save(userRole);
@@ -124,7 +124,7 @@ public class UserRoleController {
             throw new MissingParameterException("UserRole ID");
         }
 
-        userRoleService.deleteById(userRoleId);
+        userRoleService.delete(userRoleId);
 
         return new JSONResponse(true, 1, null, Enums.JSONResponseMessage.SUCCESS.toString());
     }
@@ -140,7 +140,7 @@ public class UserRoleController {
             if (!userService.exists(userId)) {
                 return new JSONResponse(false, 0, null, Enums.JSONResponseMessage.RESOURCE_NOT_FOUND.toString());
             }
-            user = userService.findOne(userId).get();
+            user = userService.findOne(userId);
         } else {
             throw new MissingParameterException("UserRole ID");
         }

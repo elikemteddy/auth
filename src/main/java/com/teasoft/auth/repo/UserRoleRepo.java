@@ -27,5 +27,5 @@ public interface UserRoleRepo extends CrudRepository<UserRole, Long> {
     List<UserRole> findAll();
 
     @Override
-    List<UserRole> findAllById(Iterable<Long> itbls);
+    List<UserRole> findAll(Iterable<Long> itbls);
 }
