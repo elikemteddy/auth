@@ -62,7 +62,7 @@ public class Users implements Serializable {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date dateTimeUpdated;
     @JsonView(Views.TokenUser.class)
-    @OneToMany(mappedBy="user", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy="user")
     private List<UserRole> roles;
     @Transient
     private List<String> userRoles;

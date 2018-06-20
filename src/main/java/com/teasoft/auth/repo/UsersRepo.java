@@ -8,7 +8,9 @@ package com.teasoft.auth.repo;
 
 
 import com.teasoft.auth.model.Users;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -20,4 +22,6 @@ public interface UsersRepo extends CrudRepository<Users, Long> {
     Users findByUsername(String username);
     Users findByPhone(String phone);
     Users findByEmail(String email);
+    @Query(value = "SELECT h FROM Users h WHERE h.phone = :phoneNumber")
+    Users queryUser(@Param("phoneNumber")String phoneNumber);
 }

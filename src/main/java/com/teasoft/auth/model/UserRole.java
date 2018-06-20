@@ -32,7 +32,7 @@ public class UserRole implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @JsonIgnore
-    @ManyToOne()
+    @ManyToOne(fetch=FetchType.LAZY)
     private Users user;
     @ManyToOne()
     private Role role;
