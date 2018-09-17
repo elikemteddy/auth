@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -148,6 +149,27 @@ public class UserRoleController {
         List<UserRole> userRoles = userRoleService.findByUser(user);
 
         return new JSONResponse(true, 1, userRoles, Enums.JSONResponseMessage.SUCCESS.toString());
+    }
+    
+    /**
+     * Returns a list of users of a particular role.
+     * @param role the role by which to return users
+     * @return all users having a particular role.
+     */
+    @RequestMapping(value = "admin/auth/users", method=RequestMethod.GET)
+    @ResponseBody
+    public JSONResponse getByRole(@RequestParam("role") String role) {
+        //Get the Role object from db
+        Role roleObj = roleService.findByRoleName(role);
+        //Find out if the role name provided exists
+        if(roleObj == null) {
+            //Return false if the role name doesn't exist
+            return new JSONResponse(false, 0, null, "Invalid role name");
+        }
+        //Query the list of users using the specified role
+        List<UserRole> users = userRoleService.findByRole(roleObj);
+        //return true with the list of users
+        return new JSONResponse(true, users.size(), users, Enums.JSONResponseMessage.SUCCESS.toString());
     }
 
     @ExceptionHandler(NullPointerException.class)

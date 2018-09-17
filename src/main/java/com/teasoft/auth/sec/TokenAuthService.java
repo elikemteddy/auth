@@ -19,8 +19,8 @@ import java.util.Date;
 @Service
 public class TokenAuthService {
 
-    // 100 days
-    private static final long VALIDITY_TIME_MS = 100 * 24 * 60 * 60 * 1000;
+    // 10 days
+    private static final long VALIDITY_TIME_MS = 10 * 24 * 60 * 60 * 1000;
     private static final long TEMP_VALIDITY_TIME_MS = 1000;
     private static final String AUTH_HEADER_NAME = "x-auth-token";
 

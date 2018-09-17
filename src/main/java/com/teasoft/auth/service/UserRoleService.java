@@ -28,6 +28,10 @@ public class UserRoleService {
     public UserRole findByUserAndRole(Users user, Role role) {
         return userRoleRepo.findByUserAndRole(user, role);
     }
+    
+    public List<UserRole> findByRole(Role role) {
+        return userRoleRepo.findByRole(role);
+    }
 
     public UserRole save(UserRole userRole) {
         return userRoleRepo.save(userRole);

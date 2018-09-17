@@ -22,6 +22,8 @@ public interface UserRoleRepo extends CrudRepository<UserRole, Long> {
     List<UserRole> findByUser(Users users);
 
     UserRole findByUserAndRole(Users user, Role role);
+    
+    List<UserRole> findByRole(Role role);
 
     @Override
     List<UserRole> findAll();
