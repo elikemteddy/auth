@@ -31,8 +31,8 @@ public class UserRole implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @JsonIgnore
-    @ManyToOne(fetch=FetchType.LAZY)
+//    @JsonIgnore
+    @ManyToOne(fetch=FetchType.EAGER)
     private Users user;
     @ManyToOne()
     private Role role;

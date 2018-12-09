@@ -1,14 +1,17 @@
 package com.teasoft.auth.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.teasoft.auth.exceptions.MissingParameterException;
 import com.teasoft.auth.model.Role;
 import com.teasoft.auth.model.UserRole;
 import com.teasoft.auth.model.Users;
+import com.teasoft.auth.sec.Views;
 import com.teasoft.auth.service.RoleService;
 import com.teasoft.auth.service.UserRoleService;
 import com.teasoft.auth.service.UsersService;
 import com.teasoft.auth.util.Enums;
 import com.teasoft.auth.util.JSONResponse;
+import com.teasoft.auth.util.JSONResponse2;
 import io.jsonwebtoken.ExpiredJwtException;
 import java.util.HashMap;
 import java.util.List;
@@ -171,7 +174,7 @@ public class UserRoleController {
         //return true with the list of users
         return new JSONResponse(true, users.size(), users, Enums.JSONResponseMessage.SUCCESS.toString());
     }
-
+    
     @ExceptionHandler(NullPointerException.class)
     @ResponseBody
     public JSONResponse nullPointerException(NullPointerException e) {
