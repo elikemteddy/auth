@@ -13,6 +13,7 @@ import com.teasoft.auth.util.Enums;
 import com.teasoft.auth.util.JSONResponse;
 import com.teasoft.auth.util.JSONResponse2;
 import io.jsonwebtoken.ExpiredJwtException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,13 +44,15 @@ public class UserRoleController {
     @Autowired
     UsersService userService;
 
-    @RequestMapping(value = "/admin/auth/userrole", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Deprecated
+    @RequestMapping(value = "/admin/auth/userrole/old", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public JSONResponse save(HttpServletRequest request, HttpServletResponse response, @RequestBody Object data) throws Exception {
-        Map<String, String> dataHash = (HashMap<String, String>) data;
+        Map<String, Object> dataHash = (HashMap<String, Object>) data;
         Long roleId, userId;
         if (dataHash.containsKey("roleId")) {
-            roleId = Long.getLong(dataHash.get("roleId"));
+            roleId = ((Integer)dataHash.get("roleId")).longValue();
+            
             if (!roleService.exists(roleId)) {
                 return new JSONResponse(false, 0, null, Enums.JSONResponseMessage.RESOURCE_NOT_FOUND.toString());
             }
@@ -58,7 +61,7 @@ public class UserRoleController {
         }
 
         if (dataHash.containsKey("userId")) {
-            userId = Long.getLong(dataHash.get("userId"));
+            userId = ((Integer)dataHash.get("userId")).longValue();
             if (!userService.exists(userId)) {
                 return new JSONResponse(false, 0, null, Enums.JSONResponseMessage.RESOURCE_NOT_FOUND.toString());
             }
@@ -76,14 +79,53 @@ public class UserRoleController {
         return new JSONResponse(true, 1, userRole, Enums.JSONResponseMessage.SUCCESS.toString());
     }
 
+    @RequestMapping(value = "/admin/auth/userrole", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public JSONResponse saveUserRole(HttpServletRequest request, HttpServletResponse response, @RequestBody Object data) throws Exception {
+        Map<String, Object> dataHash = (HashMap<String, Object>) data;
+        Long userId;
+        ArrayList roleId;
+        if (dataHash.containsKey("userId")) {
+            userId = ((Integer)dataHash.get("userId")).longValue();
+            if (!userService.exists(userId)) {
+                return new JSONResponse(false, 0, null, Enums.JSONResponseMessage.RESOURCE_NOT_FOUND.toString());
+            }
+        } else {
+            throw new MissingParameterException("User ID");
+        }
+        Users user = userService.findOne(userId);
+        ArrayList<UserRole> userRoles = new ArrayList<>();
+        if (dataHash.containsKey("roleId")) {
+            roleId = (ArrayList) dataHash.get("roleId");
+            for (Object id : roleId) {
+                if (!roleService.exists(((Integer)id).longValue())) {
+                    return new JSONResponse(false, 0, null, Enums.JSONResponseMessage.RESOURCE_NOT_FOUND.toString());
+                }
+                Role role = roleService.findOne(((Integer)id).longValue());
+                if(userRoleService.findByUserAndRole(user, role) != null) {
+                    return new JSONResponse(false, 0, null, "User already assigned specified role");
+                }
+                UserRole userRole = new UserRole();
+                userRole.setRole(role);
+                userRole.setUser(user);
+                userRoles.add(userRole);
+            }
+
+        } else {
+            throw new MissingParameterException("Role ID");
+        }
+
+        return new JSONResponse(true, 1, userRoleService.save(userRoles), Enums.JSONResponseMessage.SUCCESS.toString());
+    }
+
     @RequestMapping(value = "/admin/auth/userrole", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public JSONResponse update(HttpServletRequest request, HttpServletResponse response, @RequestBody Object data) throws Exception {
-        Map<String, String> dataHash = (HashMap<String, String>) data;
+        Map<String, Integer> dataHash = (HashMap<String, Integer>) data;
         Long roleId, userId, userRoleId;
         UserRole userRole;
         if (dataHash.containsKey("userRoleId")) {
-            userRoleId = Long.getLong(dataHash.get("userRoleId"));
+            userRoleId = dataHash.get("userRoleId").longValue();
             if (!userRoleService.exists(userRoleId)) {
                 return new JSONResponse(false, 0, null, Enums.JSONResponseMessage.RESOURCE_NOT_FOUND.toString());
             }
@@ -93,7 +135,7 @@ public class UserRoleController {
         }
 
         if (dataHash.containsKey("roleId")) {
-            roleId = Long.getLong(dataHash.get("roleId"));
+            roleId = dataHash.get("roleId").longValue();
             if (!roleService.exists(roleId)) {
                 return new JSONResponse(false, 0, null, Enums.JSONResponseMessage.RESOURCE_NOT_FOUND.toString());
             }
@@ -101,7 +143,7 @@ public class UserRoleController {
         }
 
         if (dataHash.containsKey("userId")) {
-            userId = Long.getLong(dataHash.get("userId"));
+            userId = dataHash.get("userId").longValue();
             if (!userService.exists(userId)) {
                 return new JSONResponse(false, 0, null, Enums.JSONResponseMessage.RESOURCE_NOT_FOUND.toString());
             }
@@ -116,11 +158,11 @@ public class UserRoleController {
     @RequestMapping(value = "/admin/auth/userrole", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public JSONResponse delete(HttpServletRequest request, HttpServletResponse response, @RequestBody Object data) throws Exception {
-        Map<String, String> dataHash = (HashMap<String, String>) data;
+        Map<String, Integer> dataHash = (HashMap<String, Integer>) data;
         Long userRoleId;
         UserRole userRole;
         if (dataHash.containsKey("userRoleId")) {
-            userRoleId = Long.getLong(dataHash.get("userRoleId"));
+            userRoleId = dataHash.get("userRoleId").longValue();
             if (!userRoleService.exists(userRoleId)) {
                 return new JSONResponse(false, 0, null, Enums.JSONResponseMessage.RESOURCE_NOT_FOUND.toString());
             }
@@ -136,11 +178,11 @@ public class UserRoleController {
     @RequestMapping(value = "/admin/auth/userrole", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public JSONResponse get(HttpServletRequest request, HttpServletResponse response, @RequestBody Object data) throws Exception {
-        Map<String, String> dataHash = (HashMap<String, String>) data;
+        Map<String, Integer> dataHash = (HashMap<String, Integer>) data;
         Long userId;
         Users user;
         if (dataHash.containsKey("userId")) {
-            userId = Long.getLong(dataHash.get("userId"));
+            userId = dataHash.get("userId").longValue();
             if (!userService.exists(userId)) {
                 return new JSONResponse(false, 0, null, Enums.JSONResponseMessage.RESOURCE_NOT_FOUND.toString());
             }
@@ -153,19 +195,20 @@ public class UserRoleController {
 
         return new JSONResponse(true, 1, userRoles, Enums.JSONResponseMessage.SUCCESS.toString());
     }
-    
+
     /**
      * Returns a list of users of a particular role.
+     *
      * @param role the role by which to return users
      * @return all users having a particular role.
      */
-    @RequestMapping(value = "admin/auth/users", method=RequestMethod.GET)
+    @RequestMapping(value = "admin/auth/users", method = RequestMethod.GET)
     @ResponseBody
     public JSONResponse getByRole(@RequestParam("role") String role) {
         //Get the Role object from db
         Role roleObj = roleService.findByRoleName(role);
         //Find out if the role name provided exists
-        if(roleObj == null) {
+        if (roleObj == null) {
             //Return false if the role name doesn't exist
             return new JSONResponse(false, 0, null, "Invalid role name");
         }
@@ -174,7 +217,7 @@ public class UserRoleController {
         //return true with the list of users
         return new JSONResponse(true, users.size(), users, Enums.JSONResponseMessage.SUCCESS.toString());
     }
-    
+
     @ExceptionHandler(NullPointerException.class)
     @ResponseBody
     public JSONResponse nullPointerException(NullPointerException e) {
